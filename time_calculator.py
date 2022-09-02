@@ -1,26 +1,33 @@
-def add_time(start, duration):
-    verif_format_start(start)
-    if duration:
-        verif_format_duration(duration)
-
-
-def verif_format_start(start):
-    try:
-        if start.split()[1] not in ["PM", "AM"]:
-            print("format start est invalid")
+def add_time(start, duration, day=None):
+    list_start_time = start.split()
+    list_start = list_start_time[0].split(":")
+    list_duration = duration.split(":")
+    h = int(list_start[0]) + int(list_duration[0])
+    ap = list_start_time[1]
+    if 12 < h < 24:
+        if h == 12:
+            h = 12
         else:
-            return
-            # print("le format start est valid")
-    except:
-        print("Le format start est invalid")
+            h = h - 12
 
+        if ap == "AM":
+            ap = "PM"
+        else:
+            ap = "AM"
 
-def verif_format_duration(duration):
-    verif = duration.split(":")
-    if int(verif[0]) > 12 or int(verif[1]) > 60:
-        print("le format duration invalid")
+    m = int(list_start[1]) + int(list_duration[1])
+    if m > 60:
+        if m % 60 != 0:
+            h = h + (m // 60)
+            m = m % 60
+
+    re = str(h) + " : " + f'{m:02}' + " " + ap
+    if day:
+        re = re + ", " + day
+
+    return re
 
 
 if __name__ == '__main__':
-    add_time("3:00 PM", "150:00")
-
+    print(add_time("11:30 AM", "2:32", "Monday"))
+# Returns: 2:02 PM, Monday
